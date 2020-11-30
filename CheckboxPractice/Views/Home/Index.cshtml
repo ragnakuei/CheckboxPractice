@@ -1,8 +1,33 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@using CheckboxPractice.Controllers
+@model CheckboxPractice.Controllers.TestViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+<form asp-action="Index" method="post">
+
+    @{
+        var dtoAs = ViewBag.DtoAs as DtoA[];
+    }
+    <p>
+        @foreach (var dtoA in dtoAs)
+        {
+            <p>@(dtoA.Name)</p>
+            @foreach (var dtoB in dtoA.DtoBs)
+            {
+                <p>
+                    <input type="checkbox"
+                           value="@(dtoB.Id)"
+                           id="@($"{dtoA.Id}_{dtoB.Id}")"
+                           name="DtoBIds"
+                           @( Model.DtoBIds.Contains(dtoB.Id) ? "checked" : "" )
+                           />
+                    <label for="@($"{dtoA.Id}_{dtoB.Id}")">@(dtoB.Name)</label>
+                </p>
+            }
+        }
+    </p>
+
+    <p>
+        <input type="submit"
+               value="Submit" />
+    </p>
+</form>

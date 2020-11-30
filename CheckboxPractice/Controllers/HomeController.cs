@@ -18,20 +18,76 @@ namespace CheckboxPractice.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            SetViewBagDtoAs();
+
+            var vm = new TestViewModel
+                     {
+                         DtoBIds = new HashSet<int>()
+                     };
+
+            return View(vm);
         }
 
-        public IActionResult Privacy()
+        [HttpPost]
+        [ActionName("Index")]
+        public IActionResult PostIndex(TestViewModel vm)
         {
-            return View();
+            SetViewBagDtoAs();
+
+            return View("Index", vm);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        private void SetViewBagDtoAs()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            ViewBag.DtoAs = new[]
+                            {
+                                new DtoA
+                                {
+                                    Id   = 1,
+                                    Name = "A1",
+                                    DtoBs = new[]
+                                            {
+                                                new DtoB { Id = 11, Name = "B11" },
+                                                new DtoB { Id = 12, Name = "B12" },
+                                                new DtoB { Id = 13, Name = "B13" },
+                                            }
+                                },
+                                new DtoA
+                                {
+                                    Id   = 2,
+                                    Name = "A2",
+                                    DtoBs = new[]
+                                            {
+                                                new DtoB { Id = 14, Name = "B14" },
+                                                new DtoB { Id = 15, Name = "B15" },
+                                                new DtoB { Id = 16, Name = "B16" },
+                                            }
+                                },
+                            };
         }
+    }
+
+    public class TestViewModel
+    {
+        public HashSet<int> DtoBIds { get; set; }
+    }
+
+    public class DtoA
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public DtoB[] DtoBs { get; set; }
+    }
+
+    public class DtoB
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
     }
 }
